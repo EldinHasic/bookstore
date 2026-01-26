@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: lightblue;
+    font-size: 24px;
+}
+
+.main {
+    flex: 1;
+}
+
+h2 {
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    height: 32px;
+    width: 32px;
+}
+
+ul, li {
+    list-style: none;
+    padding: 0;
+}
+
+
