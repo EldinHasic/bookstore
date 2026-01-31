@@ -15,7 +15,10 @@
 }
 
 .bookContent {
-    min-width: 500px;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 600px;
     background-color: cornflowerblue;
     padding: 24px;
     border-radius: 12px;
@@ -40,7 +43,32 @@
     gap: 50px;
 }
 
+.commentInput {
+    display: flex;
+    flex-direction: row;
+    max-width: 24px;
+    max-height: 24px;
+}
+
 .commentsContainer {
-    height: 200px;
-    width: 200px;
+    margin-top: 16px;
+    flex: 1;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.comment {
+    display: flex;
+    gap: 12px;
+
+}
+
+.commentBox {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 6px;
+    margin: 0;
+    padding-left: 0;
 }

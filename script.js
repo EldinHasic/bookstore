@@ -174,41 +174,82 @@ let books = [
     }
 ]
 
+let currentIndex = 0;
 let MainSectionRef = document.getElementById('content');
-let CommentSectionRef = document.getElementById('commentSection')
+let CommentSectionRef = document.getElementById('commentSection');
 
 function renderBooks() {
     for (let bookIndex = 0; bookIndex < books.length; bookIndex++) {
-        MainSectionRef.innerHTML += getBookHTML(bookIndex);
-        let comments = books[bookIndex].comments
-        for (let commentsIndex = 0; commentsIndex < comments.length; commentsIndex++) {
-            CommentSectionRef.innerHTML += `${comments[commentsIndex].name}: ${comments[commentsIndex].comment}`
-        }
+        const book = books[bookIndex];
+        MainSectionRef.innerHTML += getBookHTML(book, bookIndex);
     }
+    
 }
 
-function getBookHTML(bookIndex) {
+function getBookHTML(book, bookIndex) {
     return `<section class="mainContainer">
-        <div class="bookContent" id="book${bookIndex}>
+        <div class="bookContent" id="book${bookIndex}">
             <article class="bookContentHead">
                 <img src="book.png" alt="book-image"></img>
-                <h2>${books[bookIndex].name}</h2>
+                <h2>${book.name}</h2>
             </article>
             <p>-----------------------------------------------------------------------------------</p>
             <div class="bookContentMain">
                 <article class="PriceLikes">
-                    <div>${books[bookIndex].price}€</div>
-                    <div>Likes: ${books[bookIndex].likes}</div>
+                    <div>${book.price}€</div>
+                    <div>Likes: ${book.likes}</div>
                 </article>
                 <article class="bookDetails">
                     <ul>
-                        <li>Author: ${books[bookIndex].author}</li>
-                        <li>Year: ${books[bookIndex].publishedYear}</li>
-                        <li>Genre: ${books[bookIndex].genre}</li>
+                        <li>Author: ${book.author}</li>
+                        <li>Year: ${book.publishedYear}</li>
+                        <li>Genre: ${book.genre}</li>
                     </ul>
                 </article>
             </div>
             <p>-----------------------------------------------------------------------------------</p> 
-        </div>
+             <div class="commentsContainer"  id="commentSection${bookIndex}">
+            <h3>Kommentare:</h3>
+            <ul class="commentBox">
+               ${renderComments(book, bookIndex)}
+            </ul>
+             </div>
+        <input type="text" id="name${bookIndex}" placeholder="Namen eingeben....">
+        <input type="text" id="message${bookIndex}" placeholder="Nachricht eingeben..."> 
+        <button onclick="sendMessage()">Senden</button>
     </section>`
+}
+
+
+function renderComments(book, bookIndex) {
+    let bookComments = "";
+    for (let commentsIndex = 0; commentsIndex < book.comments.length; commentsIndex++) {
+        let comments = book.comments[commentsIndex];
+        bookComments += getCommentsHTML(comments, bookIndex);
+
+    }
+    return bookComments;
+}
+
+function getCommentsHTML(comment, bookIndex) {
+    return `<li class="comment">
+                 <p>${comment.name}:</p>
+                 <p>${comment.comment}</p>
+            </li>`
+}
+
+
+function sendMessage(bookIndex) {
+    currentIndex = bookIndex;
+    let message = document.getElementById('message' + bookIndex); // HTML Element mit ID message wird an die Variable 'message' zugewiesen. 
+    let name = document.getElementById('name' + bookIndex);
+
+    let chat = document.getElementById('commentSection' + bookIndex);
+
+    if (message.value.length > 0 || message.value.length !== null) {
+        chat.innerHTML += 
+        `<div class="comment"><i>${name.value || 'Unbekannt'}</i>: ${message.value}</div>`
+        message.value = ''; // Inhalt von Textfeld mit id "message" löschen
+        name.value = '';
+    }
 }
