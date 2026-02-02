@@ -90,6 +90,7 @@ function renderBooks() {
     for (let bookIndex = 0; bookIndex < books.length; bookIndex++) {
         const book = books[bookIndex];
         MainSectionRef.innerHTML += getBookHTML(book, bookIndex);
+        renderLikes(bookIndex);
     }
 
 }
@@ -105,7 +106,8 @@ function getBookHTML(book, bookIndex) {
             <div class="bookContentMain">
                 <article class="PriceLikes">
                     <div>${book.price}€</div>
-                    <div>Likes: ${book.likes}</div>
+                    <div id="likeCount${bookIndex}">Likes: ${book.likes}</div>
+                    <img id="like${bookIndex}" onclick="likeBook(${bookIndex})" src="heart-empty.png"></img>
                 </article>
                 <article class="bookDetails">
                     <ul>
@@ -119,7 +121,7 @@ function getBookHTML(book, bookIndex) {
              <div class="commentsContainer">
             <h3>Kommentare:</h3>
            <ul class="commentBox" id="commentBox${bookIndex}">
-    ${renderComments(book, bookIndex)}
+              ${renderComments(book, bookIndex)}
            </ul>
              </div>
         <input type="text" id="name${bookIndex}" placeholder="Namen eingeben....">
@@ -163,4 +165,35 @@ function sendMessage(bookIndex) {
     commentBox.innerHTML = renderComments(books[bookIndex], bookIndex);
     messageInput.value = '';
     nameInput.value = '';
+}
+
+function renderLikes(bookIndex) {
+    let currentLike = document.getElementById("like" + bookIndex);
+    let book = books[bookIndex];
+    if (book.liked == true) {
+        currentLike.src = "heart-filled.png";
+    }
+    else {
+        currentLike.src = "heart-empty.png";
+    }
+}
+
+function likeBook(bookIndex) {
+    let currentLike = document.getElementById("like" + bookIndex);
+    let likeCount = document.getElementById("likeCount" + bookIndex);
+    let book = books[bookIndex];
+
+    if (book.liked == true) {
+        currentLike.src = "heart-empty.png";
+        book.likes -= 1;
+        likeCount.innerHTML = book.likes;
+        book.liked = false;
+    }
+    else if (book.liked == false) {
+
+        currentLike.src = "heart-filled.png";
+        book.likes += 1;
+        likeCount.innerHTML = book.likes;
+        book.liked = true;
+    }
 }
