@@ -31,16 +31,6 @@ let books = [
         ]
     },
     {
-        "name": "Der vergessene Pfad",
-        "author": "Maximilian Schwarz",
-        "likes": 980,
-        "liked": false,
-        "price": 14.50,
-        "publishedYear": 2021,
-        "genre": "Fantasy",
-        "comments": []
-    },
-    {
         "name": "Die Farben des Himmels",
         "author": "Laura Blau",
         "likes": 1520,
@@ -89,88 +79,6 @@ let books = [
                 "comment": "Die Liebesgeschichte war herzergreifend und wunderschön geschrieben."
             }
         ]
-    },
-    {
-        "name": "Der letzte Wächter",
-        "author": "Sabine Grün",
-        "likes": 1300,
-        "liked": true,
-        "price": 16.75,
-        "publishedYear": 2017,
-        "genre": "Fantasy",
-        "comments": []
-    },
-    {
-        "name": "Im Schatten des Mondes",
-        "author": "Philipp Silber",
-        "likes": 890,
-        "liked": false,
-        "price": 12.30,
-        "publishedYear": 2022,
-        "genre": "Science-Fiction",
-        "comments": [
-            {
-                "name": "BücherLiebhaber",
-                "comment": "Eine magische Reise durch eine faszinierende Fantasiewelt, absolut fesselnd."
-            },
-            {
-                "name": "Leseratte",
-                "comment": "Ein packender Science-Fiction-Roman, der mich zum Nachdenken gebracht hat."
-            }
-        ]
-    },
-    {
-        "name": "Jenseits der Sterne",
-        "author": "Oliver Schwarz",
-        "likes": 1450,
-        "liked": true,
-        "price": 21.00,
-        "publishedYear": 2015,
-        "genre": "Science-Fiction",
-        "comments": [
-            {
-                "name": "Leser123",
-                "comment": "Ein fesselndes Abenteuer, das mich von Anfang bis Ende mitgerissen hat."
-            }
-        ]
-    },
-    {
-        "name": "Das verborgene Königreich",
-        "author": "Elena Gold",
-        "likes": 920,
-        "liked": false,
-        "price": 17.50,
-        "publishedYear": 2020,
-        "genre": "Fantasy",
-        "comments": [
-            {
-                "name": "Bookworm92",
-                "comment": "Ein faszinierendes Buch, das mich von der ersten Seite an gefesselt hat."
-            }
-        ]
-    },
-    {
-        "name": "Liebe in Zeiten des Krieges",
-        "author": "Emilia Rot",
-        "likes": 1800,
-        "liked": true,
-        "price": 19.99,
-        "publishedYear": 2016,
-        "genre": "Romantik",
-        "comments": [
-            {
-                "name": "Bibliophile23",
-                "comment": "Die Fantasiewelt war so lebendig, ich konnte das Buch kaum aus der Hand legen."
-            },
-            {
-                "name": "StorySeeker",
-                "comment": "Eine unglaublich berührende Liebesgeschichte, die mich tief bewegt hat."
-            },
-            {
-                "name": "SciFiExplorer",
-                "comment": "Spannende Zukunftsvisionen und interessante Charaktere machten diesen Roman einzigartig."
-            }
-        ]
     }
 ]
 
@@ -183,7 +91,7 @@ function renderBooks() {
         const book = books[bookIndex];
         MainSectionRef.innerHTML += getBookHTML(book, bookIndex);
     }
-    
+
 }
 
 function getBookHTML(book, bookIndex) {
@@ -208,15 +116,15 @@ function getBookHTML(book, bookIndex) {
                 </article>
             </div>
             <p>-----------------------------------------------------------------------------------</p> 
-             <div class="commentsContainer"  id="commentSection${bookIndex}">
+             <div class="commentsContainer">
             <h3>Kommentare:</h3>
-            <ul class="commentBox">
-               ${renderComments(book, bookIndex)}
-            </ul>
+           <ul class="commentBox" id="commentBox${bookIndex}">
+    ${renderComments(book, bookIndex)}
+           </ul>
              </div>
         <input type="text" id="name${bookIndex}" placeholder="Namen eingeben....">
         <input type="text" id="message${bookIndex}" placeholder="Nachricht eingeben..."> 
-        <button onclick="sendMessage()">Senden</button>
+        <button onclick="sendMessage(${bookIndex})">Senden</button>
     </section>`
 }
 
@@ -231,25 +139,28 @@ function renderComments(book, bookIndex) {
     return bookComments;
 }
 
-function getCommentsHTML(comment, bookIndex) {
+function getCommentsHTML(comment) {
     return `<li class="comment">
                  <p>${comment.name}:</p>
                  <p>${comment.comment}</p>
             </li>`
 }
 
-
 function sendMessage(bookIndex) {
-    currentIndex = bookIndex;
-    let message = document.getElementById('message' + bookIndex); // HTML Element mit ID message wird an die Variable 'message' zugewiesen. 
-    let name = document.getElementById('name' + bookIndex);
+    let messageInput = document.getElementById('message' + bookIndex);
+    let nameInput = document.getElementById('name' + bookIndex);
+    let commentBox = document.getElementById('commentBox' + bookIndex);
 
-    let chat = document.getElementById('commentSection' + bookIndex);
+    let message = messageInput.value;
+    let name = nameInput.value;
 
-    if (message.value.length > 0 || message.value.length !== null) {
-        chat.innerHTML += 
-        `<div class="comment"><i>${name.value || 'Unbekannt'}</i>: ${message.value}</div>`
-        message.value = ''; // Inhalt von Textfeld mit id "message" löschen
-        name.value = '';
+    if (message !== null) {
+        books[bookIndex].comments.unshift({
+            name: name || "Unbekannt",
+            comment: message
+        });
     }
+    commentBox.innerHTML = renderComments(books[bookIndex], bookIndex);
+    messageInput.value = '';
+    nameInput.value = '';
 }
